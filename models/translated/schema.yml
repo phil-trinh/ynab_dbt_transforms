@@ -1,0 +1,16 @@
+version: 1
+
+sources:
+  - name: ynab_budget
+    description: "YNAB budget data in local postgresql database"
+    database: DEVELOPER  
+    schema: raw
+    tables:
+      - name: transactions_data_transactions
+        description: "Transactions data for main budget in YNAB."
+      - name: transactions_data_tr__tions_subtransactions
+        description: "Sub-transactions data for main budget in YNAB for transactions that have been split."
+      - name: categories_data_category_groups_categories
+        description: "Main category groups for main budget in YNAB."
+      - name: categories_data_category_groups
+        description: "Granular categories for main budget in YNAB."
