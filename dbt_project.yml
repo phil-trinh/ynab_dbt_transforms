@@ -36,6 +36,6 @@ models:
     example:
       +materialized: view
       +schema: example
-    translated:
+    staged:
       +materialized: view
-      +schema: translated
+      +schema: staged
