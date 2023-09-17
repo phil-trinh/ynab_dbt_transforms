@@ -4,6 +4,7 @@ WITH transactions AS (
         transaction_id,
         DATE,
         amount,
+        category_id,
         category_name,
         payee_name,
         account_name,
@@ -27,6 +28,7 @@ subtransactions AS (
         subtransaction_id,
         transaction_id,
         amount,
+        category_id,
         category_name,
         payee_name,
         memo,
@@ -51,6 +53,10 @@ transactions_joined AS (
             subtransactions.amount,
             transactions.amount
         ) AS amount,
+        COALESCE(
+            subtransactions.category_id,
+            transactions.category_id
+        ) AS category_id,
         COALESCE(
             subtransactions.category_name,
             transactions.category_name
