@@ -49,6 +49,10 @@ sources:
             description: "ID of Category Group"
             tests:
               - not_null
+          - name: category_group_name
+            description: "Category Group Name"
+            tests:
+              - not_null
 
       - name: categories_data_category_groups
         description: "Granular categories for main budget in YNAB."
