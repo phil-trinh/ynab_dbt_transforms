@@ -1,3 +1,5 @@
+{{ config(alias='transactions') }}
+
 -- Main transactions table
 WITH transactions AS (
     SELECT
@@ -35,7 +37,7 @@ subtransactions AS (
         transfer_account_id,
         transfer_transaction_id
     FROM
-        "staged"."subtransactions_staged"
+        {{ ref("subtransactions_staged") }}
     WHERE
         deleted = FALSE -- Only non-deleted transactions
 ),

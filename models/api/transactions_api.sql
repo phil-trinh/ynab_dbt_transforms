@@ -1,3 +1,5 @@
+{{ config(alias='transactions') }}
+
 -- Transactions Translated
 WITH transactions AS (
     SELECT
@@ -15,6 +17,7 @@ categories AS (
         {{ ref("categories_staged") }}
 )
 
+-- Enrich transactions with main category groups
 SELECT
     transaction_id,
     subtransaction_id,

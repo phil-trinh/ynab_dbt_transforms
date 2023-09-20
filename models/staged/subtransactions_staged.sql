@@ -1,7 +1,9 @@
-select
-    id as subtransaction_id,
+{{ config(alias='subtransactions') }}
+
+SELECT
+    id AS subtransaction_id,
     transaction_id,
-    (amount / 1000) as amount,
+    (amount / 1000) AS amount,
     category_id,
     category_name,
     payee_id,
@@ -10,4 +12,4 @@ select
     deleted,
     transfer_transaction_id,
     transfer_account_id
-from {{ source('ynab_budget', 'transactions_data_tr__tions_subtransactions') }}
+FROM {{ source('ynab_budget', 'transactions_data_tr__tions_subtransactions') }}

@@ -1,3 +1,5 @@
+{{ config(alias='categories') }}
+
 SELECT
     id AS category_id,
     name AS category_name,
@@ -20,5 +22,4 @@ SELECT
     note,
     deleted,
     hidden
-FROM
-    {{ source('ynab_budget', 'categories_data_category_groups_categories') }}
+FROM {{ source('ynab_budget', 'categories_data_category_groups_categories') }}
