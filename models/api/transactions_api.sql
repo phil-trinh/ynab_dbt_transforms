@@ -19,16 +19,19 @@ categories AS (
 
 -- Enrich transactions with main category groups
 SELECT
-    transaction_id,
+    CASE
+        WHEN subtransaction_id IS NOT NULL THEN CONCAT_WS('_', transaction_id, subtransaction_id)
+        ELSE transaction_id
+    END AS id,
+    transaction_id AS original_transaction_id,
     subtransaction_id,
     date,
-    amount,
+    (amount * -1) AS amount,  -- Flip the sign for spend in positive
     category_group_name,
     category_name,
     account_name,
     payee_name,
     memo,
-    transfer_account_id,
     transfer_transaction_id,
     matched_transaction_id,
     subtransaction_flag
