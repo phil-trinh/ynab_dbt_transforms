@@ -3,7 +3,7 @@
 SELECT
     id AS transaction_id,
     to_date(date, 'yyyy-mm-dd') AS date,
-    (amount / 1000) AS amount,
+    {{ amounts_to_dollars('amount') }},
     category_id,
     category_name,
     account_id,

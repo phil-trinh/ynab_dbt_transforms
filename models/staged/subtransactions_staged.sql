@@ -3,7 +3,7 @@
 SELECT
     id AS subtransaction_id,
     transaction_id,
-    (amount / 1000) AS amount,
+    {{ amounts_to_dollars('amount') }},
     category_id,
     category_name,
     payee_id,
