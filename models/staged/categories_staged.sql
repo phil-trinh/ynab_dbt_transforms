@@ -22,4 +22,4 @@ SELECT
     note,
     deleted,
     hidden
-FROM {{ source('ynab_budget', 'categories_data_category_groups_categories') }}
+FROM {{ source('ynab_budget', 'categories_categories') }}

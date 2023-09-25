@@ -15,11 +15,10 @@ SELECT
     approved,
     deleted,
     debt_transaction_type,
-    flag_color,
     import_payee_name,
     import_payee_name_original,
     import_id,
     transfer_account_id,
     transfer_transaction_id,
     matched_transaction_id
-FROM {{ source('ynab_budget', 'transactions_data_transactions') }}
+FROM {{ source('ynab_budget', 'transactions') }}
