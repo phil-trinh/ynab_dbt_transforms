@@ -31,9 +31,9 @@ clean-targets:
 models:
   ynab_dbt_transforms:
     # Config indicated by + and applies to all files under models/example/
-    api:
+    datamart:
       +materialized: table
-      +schema: api
+      +schema: datamart
     staged:
       +materialized: view
       +schema: staged
