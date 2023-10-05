@@ -1,10 +1,8 @@
 version: 2
 
 sources:
-  - name: ynab_budget
+  - name: raw
     description: "YNAB budget data in local postgresql database"
-    database: dev  
-    schema: raw
     tables:
       - name: transactions
         description: "Transactions data for main budget in YNAB."

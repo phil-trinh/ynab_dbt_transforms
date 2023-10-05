@@ -21,4 +21,4 @@ SELECT
     transfer_account_id,
     transfer_transaction_id,
     matched_transaction_id
-FROM {{ source('ynab_budget', 'transactions') }}
+FROM {{ source('raw', 'transactions') }}
