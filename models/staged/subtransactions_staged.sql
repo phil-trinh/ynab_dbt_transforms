@@ -12,4 +12,4 @@ SELECT
     deleted,
     transfer_transaction_id,
     transfer_account_id
-FROM {{ source('ynab_budget', 'transactions_subtransactions') }}
+FROM {{ source('raw', 'transactions_subtransactions') }}
