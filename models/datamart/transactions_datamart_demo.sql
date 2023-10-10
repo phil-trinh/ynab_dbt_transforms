@@ -22,9 +22,9 @@ SELECT
     date,
 
     -- New amount column, randomly picked based on current distribution
-    random_normal(
-        avg_wo_outliers,
-        std_wo_outliers
+    ROUND(
+        CAST(random_normal(avg_wo_outliers, std_wo_outliers) AS numeric),
+        2
     ) AS amount,
     category_group_name,
 
