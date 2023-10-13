@@ -8,8 +8,8 @@ SELECT
     category_name,
     payee_id,
     payee_name,
-    memo,
+    NULLIF(memo, '') AS memo,  -- Null empty memos
     deleted,
     transfer_transaction_id,
     transfer_account_id
-FROM {{ source('raw', 'transactions_subtransactions') }}
+FROM {{ source('raw', 'subtransactions') }}

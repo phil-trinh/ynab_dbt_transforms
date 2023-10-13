@@ -19,7 +19,7 @@ SELECT
     goal_months_to_budget,
     goal_target_month,
     goal_creation_month,
-    note,
+    NULLIF(note, '') AS note,  -- Null empty notes
     deleted,
     hidden
-FROM {{ source('raw', 'categories_categories') }}
+FROM {{ source('raw', 'categories_groups') }}

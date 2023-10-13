@@ -1,24 +1,21 @@
 {{ config(alias = 'transactions_wo_outliers') }}
 
 -- Flip sign of main transaction amount
-WITH
-    transactions AS (
-        SELECT
-            (
-                amount * -1
-            ) AS amount
-        FROM
-            {{ ref("transactions_translated") }}
-    ),
+WITH transactions AS (
+    SELECT
+        (amount * -1) AS amount
+    FROM
+        {{ ref("transactions_translated") }}
+),
 
-    -- Calculate z-score: (amount - mean(amount)) / stddev(amount)
-    transactions_z_score AS (
-        SELECT
-            amount,
-            ((amount - (AVG(amount) over ())) / (STDDEV_POP(amount) over ())) AS z_score
-        FROM
-            transactions
-    )
+-- Calculate z-score: (amount - mean(amount)) / stddev(amount)
+transactions_z_score AS (
+    SELECT
+        amount,
+        ((amount - (AVG(amount) over ())) / (STDDEV_POP(amount) over ())) AS z_score
+    FROM
+        transactions
+)
 
 -- Calculatate new mean and std. dev. without outliers
 SELECT

@@ -31,12 +31,18 @@ clean-targets:
 models:
   ynab_dbt_transforms:
     # Config indicated by + and applies to all files under models/example/
-    datamart:
-      +materialized: table
-      +schema: datamart
     staged:
       +materialized: view
       +schema: staged
+      +docs:
+        node_color: "#cd7f32"  # bronze hex
     translated:
       +materialized: view
       +schema: translated
+      +docs:
+        node_color: "silver"
+    datamart:
+      +materialized: table
+      +schema: datamart
+      +docs:
+        node_color: "gold"

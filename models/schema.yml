@@ -1,0 +1,228 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw YNAB budget data from YNAB API."
+    loader: airbyte
+    tables:
+      - name: transactions
+        description: "Transactions data for main budget in YNAB."
+        columns:
+          - name: id
+            description: "Primary key"
+            data_type: text
+            tests:
+              - unique
+              - not_null
+          - name: amount
+            description: "Transaction amount (in cents)"
+            data_type: float8
+            tests:
+              - not_null
+          - name: date
+            description: "Date of transaction"
+            data_type: date
+            tests:
+              - not_null
+          - name: account_name
+            description: "Account associated with transaction"
+            data_type: text
+            tests:
+              - not_null
+          - name: category_name
+            description: "Transaction category name"
+            data_type: text
+            tests:
+              - not_null
+        freshness:
+          warn_after:
+            count: 7
+            period: day
+          # error_after:
+          #   count: <positive_integer>
+          #   period: minute | hour | day
+          # filter: <boolean_sql_expression>
+        loaded_at_field: _airbyte_emitted_at
+
+      - name: subtransactions
+        identifier: transactions_subtransactions
+        description: "Sub-transactions data for main budget in YNAB for transactions that have been split."
+        columns:
+          - name: id
+            description: "Primary key"
+            tests:
+              - unique
+              - not_null
+          - name: amount
+            description: "Transaction amount (in cents)"
+            tests:
+              - not_null
+          - name: category_name
+            description: "Transaction category name"
+            tests:
+              - not_null
+
+      - name: category_groups
+        identifier: categories_categories
+        description: "Main category groups for main budget in YNAB."
+        columns:
+          - name: id
+            description: "Primary key"
+            tests:
+              - unique
+              - not_null
+          - name: name
+            description: "Category name"
+            tests:
+              - unique
+              - not_null
+          - name: category_group_id
+            description: "ID of Category Group"
+            tests:
+              - not_null
+          - name: category_group_name
+            description: "Category Group Name"
+            tests:
+              - not_null
+
+      - name: categories
+        description: "Granular categories for main budget in YNAB."
+        columns:
+          - name: id
+            description: "Primary key"
+            tests:
+              - unique
+              - not_null
+          - name: name
+            description: "Category group name"
+            tests:
+              - unique
+              - not_null
+
+
+models:
+  - name: transactions_datamart
+    description: "Transactions data model of all spending transactions in Phil's \"Parallel Life\" budget in YNAB."
+    config:
+      contract:
+        enforced: true
+
+    columns:
+      - name: id
+        data_type: text
+        description: "Primary Key with subtransactions having the their IDs concatenated with the original transaction ID."
+        constraints:
+          - type: primary_key
+
+      - name: original_transaction_id
+        data_type: text
+        description: "Original transaction ID if record is of a subtransaction. Otherwise, it's the same as id."
+        constraints:
+          - type: not_null
+
+      - name: subtransaction_id
+        data_type: text
+        description: "Subtransaction ID if record is of a subtransaction. Otherwise, null."
+
+      - name: date
+        data_type: date
+        description: "Date of transaction."
+        constraints:
+          - type: not_null
+
+      - name: amount
+        data_type: float8
+        description: "Transaction amount. Positive is spending, negative is refunds/reimbursements."
+        constraints:
+          - type: not_null
+
+      - name: category_group_name
+        data_type: text
+        description: "Associated major category group in budget."
+        constraints:
+          - type: not_null
+
+      - name: category_name
+        data_type: text
+        description: "Associated category in budget."
+        constraints:
+          - type: not_null
+
+      - name: account_name
+        data_type: text
+        description: "Account the Transaction came from."
+        constraints:
+          - type: not_null
+
+      - name: payee_name
+        data_type: text
+        description: "Transaction payee."
+
+      - name: memo
+        data_type: text
+        description: "Transaction comments."
+
+      - name: transfer_transaction_id
+        data_type: text
+        description: "Corresponding transaction that transferred amount to/from."
+
+      - name: matched_transaction_id
+        data_type: text
+        description: "Matched transaction that is the same as this transaction."
+
+      - name: subtransaction_flag
+        data_type: boolean
+        description: "Matched transaction that is the same as this transaction."
+        constraints:
+          - type: not_null
+
+
+  - name: transactions_datamart_demo
+    description: "Transactions data model of all spending transactions for demonstration purposes. Data has been scrubbed for personal information and amounts
+                  have been randomly generated based on distribution of actuals."
+    config:
+      contract:
+        enforced: true
+
+    columns:
+      - name: id
+        data_type: text
+        description: "Primary Key with subtransactions having the their IDs concatenated with the original transaction ID."
+        constraints:
+          - type: primary_key
+
+      - name: date
+        data_type: date
+        description: "Date of transaction."
+        constraints:
+          - type: not_null
+
+      - name: amount
+        data_type: float8
+        description: "Transaction amount. Positive is spending, negative is refunds/reimbursements."
+        constraints:
+          - type: not_null
+
+      - name: category_group_name
+        data_type: text
+        description: "Associated major category group in budget."
+        constraints:
+          - type: not_null
+
+      - name: category_name
+        data_type: text
+        description: "Associated category in budget."
+        constraints:
+          - type: not_null
+
+      - name: account_name
+        data_type: text
+        description: "Account the Transaction came from."
+        constraints:
+          - type: not_null
+
+      - name: payee_name
+        data_type: text
+        description: "Transaction payee."
+        constraints:
+          - type: not_null
