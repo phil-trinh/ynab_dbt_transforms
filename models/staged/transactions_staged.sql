@@ -10,7 +10,7 @@ SELECT
     account_name,
     payee_id,
     payee_name,
-    memo,
+    NULLIF(memo, '') AS memo,  -- Null empty memos
     cleared,
     approved,
     deleted,

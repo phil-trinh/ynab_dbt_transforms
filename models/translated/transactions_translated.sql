@@ -4,7 +4,7 @@
 WITH transactions AS (
     SELECT
         transaction_id,
-        DATE,
+        date,
         amount,
         category_id,
         category_name,
