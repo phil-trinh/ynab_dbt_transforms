@@ -25,7 +25,7 @@ SELECT
     ROUND(
         CAST(random_normal(avg_wo_outliers, std_wo_outliers) AS numeric),
         2
-    ) AS amount,
+    ) :: FLOAT AS amount,
     category_group_name,
 
     -- Alias personal category names
@@ -54,14 +54,14 @@ SELECT
                 'Term Life Insurance',
                 'YNAB'
             ) THEN 'Subscription C'
-            
+
             -- Alias family related
             WHEN category_name IN (
                 'Parallel',
                 'Little Human 👶',
                 '529 Fund'
             ) THEN 'Gifts for Family'
-            
+
             -- Alias Home related
             WHEN category_name IN ('HOA') THEN 'Utilities 💡'
             ELSE category_name
