@@ -22,4 +22,4 @@ SELECT
     NULLIF(note, '') AS note,  -- Null empty notes
     deleted,
     hidden
-FROM {{ source('raw', 'categories_categories') }}
+FROM {{ source('raw', 'category_groups') }}

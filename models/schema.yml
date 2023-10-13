@@ -2,7 +2,8 @@ version: 2
 
 sources:
   - name: raw
-    description: "YNAB budget data in local postgresql database"
+    description: "Raw YNAB budget data from YNAB API."
+    loader: airbyte
     tables:
       - name: transactions
         description: "Transactions data for main budget in YNAB."
@@ -33,8 +34,18 @@ sources:
             data_type: text
             tests:
               - not_null
+        freshness:
+          warn_after:
+            count: 7
+            period: day
+          # error_after:
+          #   count: <positive_integer>
+          #   period: minute | hour | day
+          # filter: <boolean_sql_expression>
+        loaded_at_field: _airbyte_emitted_at
 
-      - name: transactions_subtransactions
+      - name: subtransactions
+        identifier: transactions_subtransactions
         description: "Sub-transactions data for main budget in YNAB for transactions that have been split."
         columns:
           - name: id
@@ -51,7 +62,8 @@ sources:
             tests:
               - not_null
 
-      - name: categories_categories
+      - name: category_groups
+        identifier: categories_categories
         description: "Main category groups for main budget in YNAB."
         columns:
           - name: id
