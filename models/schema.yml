@@ -4,6 +4,7 @@ sources:
   - name: raw
     description: "Raw YNAB budget data from YNAB API."
     loader: airbyte
+    tags: [raw]
     tables:
       - name: transactions
         description: "Transactions data for main budget in YNAB."
