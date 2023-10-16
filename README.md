@@ -1,15 +1,28 @@
-Welcome to your new dbt project!
+# ynab_dbt_transforms
 
-### Using the starter project
+As part of a local deployment of a data analytics development system, this repository holds the [dbt](https://getdbt.com) transforms to learn the technology, workflow, and deploy analytics of the personal [YNAB](https://www.ynab.com) budgeting data.
 
-Try running the following commands:
-- dbt run
-- dbt test
+## Architecture Diagram
+*Placeholder*
 
+## Completed
+- [x] Project Setup
+- [x] dbt Dev and Prod Environments
+- [x] Schema Designations
+  - [x] staged
+  - [x] translated
+  - [x] datamart
+- [x] Schema tests/constraints
+  - [x] Sources
+  - [x] Datamart
+- [x] Documentation
+  - [x] Sources
+  - [x] Datamart
+  - [x] Node Colors
+  - [x] Data Pipeline Architecture Diagram
 
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+## To-Do
+- [ ] Exposures
+- [ ] Metrics
+- [ ] Semantic Layer
+- [ ] Deploy Documentation on Website

@@ -1,14 +1,14 @@
-{{ config(alias = 'transactions_wo_outliers') }}
+{{ config(alias = 'spending_transactions_wo_outliers') }}
 
--- Flip sign of main transaction amount
+-- Select only transaction amounts
 WITH transactions AS (
     SELECT
-        (amount * -1) AS amount
+        amount
     FROM
-        {{ ref("transactions_translated") }}
+        {{ ref("spending_transactions_datamart") }}
 ),
 
--- Calculate z-score: (amount - mean(amount)) / stddev(amount)
+-- Calculate z-scores: (amount - mean(amount)) / stddev(amount)
 transactions_z_score AS (
     SELECT
         amount,

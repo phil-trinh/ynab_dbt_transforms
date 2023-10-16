@@ -19,7 +19,6 @@ WITH transactions AS (
         {{ ref("transactions_staged") }}
     WHERE
         payee_name IS DISTINCT FROM 'Starting Balance' -- Remove all starting balance transactions
-        AND category_name <> 'Inflow: Ready to Assign' -- Remove all inflow transactions
         AND approved = TRUE -- Only approved transactions (i.e. no pending)
         AND deleted = FALSE -- Only non-deleted transactions
 ),
@@ -45,7 +44,11 @@ subtransactions AS (
 -- Join Transactions with Subtransactions and coalesce common columns
 transactions_joined AS (
     SELECT
-        transactions.transaction_id,
+        CASE
+            WHEN subtransaction_id IS NOT NULL THEN CONCAT_WS('_', transactions.transaction_id, subtransaction_id)
+            ELSE transactions.transaction_id
+        END AS id,
+        transactions.transaction_id AS original_transaction_id,
         subtransaction_id,
         transactions.date,
         COALESCE(
