@@ -1,11 +1,11 @@
-{{ config(alias = 'transactions_demo') }}
+{{ config(alias = 'spending_transactions_demo') }}
 
 WITH -- Transactions Translated
 transactions AS (
     SELECT
         *
     FROM
-        {{ ref("transactions_datamart") }}
+        {{ ref("spending_transactions_datamart") }}
 ),
 
 -- Mean & Std. Dev. of transaction amounts without outliers
@@ -13,7 +13,7 @@ transactions_minus_outliers_stats AS (
     SELECT
         *
     FROM
-        {{ ref("transactions_wo_outliers") }}
+        {{ ref("spending_transactions_wo_outliers") }}
 )
 
 -- Cross Join to get outliers and mask all other personal values
