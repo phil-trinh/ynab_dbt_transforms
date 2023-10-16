@@ -140,8 +140,6 @@ models:
       - name: category_group_name
         data_type: text
         description: "Associated major category group in budget."
-        constraints:
-          - type: not_null
 
       - name: category_name
         data_type: text
