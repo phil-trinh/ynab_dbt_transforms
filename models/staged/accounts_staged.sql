@@ -1,4 +1,13 @@
-{{ config(alias="accounts") }}
+{# Drop Account Debt tables that end up being blank from being dropped at the Airbyte ingestion #}
+
+{{ config(
+    alias="accounts",
+    pre_hook=[
+        "drop table raw.accounts_debt_escrow_amounts cascade",
+        "drop table raw.accounts_debt_interest_rates cascade",
+        "drop table raw.accounts_debt_minimum_payments cascade"
+    ]
+) }}
 
 select
     id,
