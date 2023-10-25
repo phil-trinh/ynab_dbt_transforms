@@ -1,12 +1,12 @@
-{{ config(alias='spending_transactions') }}
+{{ config(alias="spending_transactions") }}
 
 -- Flip the sign for spend in positive
-SELECT
+select
     id,
     original_transaction_id,
     subtransaction_id,
     date,
-    (amount * -1) AS amount,
+    (amount * -1) as amount,
     category_group_name,
     category_name,
     account_name,
@@ -15,15 +15,14 @@ SELECT
     transfer_transaction_id,
     matched_transaction_id,
     subtransaction_flag
-FROM
-    {{ ref("transactions_datamart") }}
-WHERE
-    payee_name IS DISTINCT FROM 'Starting Balance' -- Remove all starting balance transactions
-    AND category_name <> 'Inflow: Ready to Assign' -- Remove all inflow transactions
+from {{ ref("transactions_datamart") }}
+where
+    payee_name is distinct from 'Starting Balance'  -- Remove all starting balance transactions
+    and category_name <> 'Inflow: Ready to Assign'  -- Remove all inflow transactions
 
     -- Remove savings, investment, and debt accounts as transactions from these
     -- accounts shouldn't be counted.
-    AND account_name NOT IN (
+    and account_name not in (
         'Automated Emergency Fund',
         'Fidelity Investment Savings',
         'First Parallel Home',

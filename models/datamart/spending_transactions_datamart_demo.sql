@@ -1,115 +1,101 @@
-{{ config(alias = 'spending_transactions_demo') }}
+{{ config(alias="spending_transactions_demo") }}
 
-WITH -- Transactions Translated
-transactions AS (
-    SELECT
-        *
-    FROM
-        {{ ref("spending_transactions_datamart") }}
-),
+with  -- Transactions Translated
+    transactions as (select * from {{ ref("spending_transactions_datamart") }}),
 
--- Mean & Std. Dev. of transaction amounts without outliers
-transactions_minus_outliers_stats AS (
-    SELECT
-        *
-    FROM
-        {{ ref("spending_transactions_wo_outliers") }}
-)
+    -- Mean & Std. Dev. of transaction amounts without outliers
+    transactions_minus_outliers_stats as (
+        select * from {{ ref("spending_transactions_wo_outliers") }}
+    )
 
 -- Cross Join to get outliers and mask all other personal values
-SELECT
+select
     id,
     date,
 
     -- New amount column, randomly picked based on current distribution
-    ROUND(
-        CAST(random_normal(avg_wo_outliers, std_wo_outliers) AS numeric),
-        2
-    ) :: FLOAT AS amount,
+    round(cast(random_normal(avg_wo_outliers, std_wo_outliers) as numeric), 2)::float
+    as amount,
     category_group_name,
 
     -- Alias personal category names
     (
-        CASE
+        case
             -- Alias Subscriptions
-            WHEN category_name IN (
-                'Aspiration Bank',
-                'Costco Membership',
-                'Global Entry ✈️'
-            ) THEN 'Subscription A'
-            WHEN category_name IN (
-                'HBO Max',
-                'Hulu',
-                'iCloud',
-                'Netflix'
-            ) THEN 'Subscription B'
-            WHEN category_name IN (
-                'Nintendo Online',
-                'Patreon',
-                'Phone Service 📱',
-                'Ring Insurance 💍'
-            ) THEN 'Subscription C'
-            WHEN category_name IN (
-                'Sapphire Reserve CC',
-                'Term Life Insurance',
-                'YNAB'
-            ) THEN 'Subscription C'
+            when
+                category_name
+                in ('Aspiration Bank', 'Costco Membership', 'Global Entry ✈️')
+            then 'Subscription A'
+            when category_name in ('HBO Max', 'Hulu', 'iCloud', 'Netflix')
+            then 'Subscription B'
+            when
+                category_name
+                in ('Nintendo Online', 'Patreon', 'Phone Service 📱', 'Ring Insurance 💍')
+            then 'Subscription C'
+            when category_name in ('Sapphire Reserve CC', 'Term Life Insurance', 'YNAB')
+            then 'Subscription C'
 
             -- Alias family related
-            WHEN category_name IN (
-                'Parallel',
-                'Little Human 👶',
-                '529 Fund'
-            ) THEN 'Gifts for Family'
+            when category_name in ('Parallel', 'Little Human 👶', '529 Fund')
+            then 'Gifts for Family'
 
             -- Alias Home related
-            WHEN category_name IN ('HOA') THEN 'Utilities 💡'
-            ELSE category_name
-        END
-    ) AS category_name,
+            when category_name in ('HOA')
+            then 'Utilities 💡'
+            else category_name
+        end
+    ) as category_name,
 
     -- Alias personal account names
     (
-        CASE
+        case
             -- Alias Credit Cards
-            WHEN account_name IN (
-                'Blue Cash Everyday',
-                'Freedom'
-            ) THEN 'Credit Card A'
-            WHEN account_name IN (
-                'Unlimited',
-                'Sapphire'
-            ) THEN 'Credit Card B'
-            WHEN account_name = 'Double Cash' THEN 'Credit Card C'
+            when account_name in ('Blue Cash Everyday', 'Freedom')
+            then 'Credit Card A'
+            when account_name in ('Unlimited', 'Sapphire')
+            then 'Credit Card B'
+            when account_name = 'Double Cash'
+            then 'Credit Card C'
 
             -- Alias bank accounts
-            WHEN account_name = 'Cash Account' THEN 'Checking'
-            WHEN account_name IN (
-                'Aspiration Save',
-                'Aspiration Spend'
-            ) THEN 'Savings'
-            WHEN account_name = 'Venmo Cash' THEN 'Cash'
-            ELSE account_name
-        END
-    ) AS account_name,
+            when account_name = 'Cash Account'
+            then 'Checking'
+            when account_name in ('Aspiration Save', 'Aspiration Spend')
+            then 'Savings'
+            when account_name = 'Venmo Cash'
+            then 'Cash'
+            else account_name
+        end
+    ) as account_name,
 
     -- Alias personal payee names
     (
-        CASE
+        case
             -- Randomly generated company names form https://namelix.com/app/
-            (RANDOM() * 10) :: INT
-            WHEN 0 THEN 'Fracture Finance'
-            WHEN 1 THEN 'Trendwave'
-            WHEN 2 THEN 'UtilityFunds'
-            WHEN 3 THEN 'Partisan Goods'
-            WHEN 4 THEN 'SNAPfinance'
-            WHEN 5 THEN 'EZFOOD'
-            WHEN 6 THEN 'RetailWise'
-            WHEN 7 THEN 'Subscription Lux'
-            WHEN 8 THEN 'Electronics Edge'
-            WHEN 9 THEN 'Commerce Hub'
-            WHEN 10 THEN 'Eateria'END
-    ) AS payee_name
-FROM
-    transactions
-    CROSS JOIN transactions_minus_outliers_stats
+            (random() * 10)::int
+            when 0
+            then 'Fracture Finance'
+            when 1
+            then 'Trendwave'
+            when 2
+            then 'UtilityFunds'
+            when 3
+            then 'Partisan Goods'
+            when 4
+            then 'SNAPfinance'
+            when 5
+            then 'EZFOOD'
+            when 6
+            then 'RetailWise'
+            when 7
+            then 'Subscription Lux'
+            when 8
+            then 'Electronics Edge'
+            when 9
+            then 'Commerce Hub'
+            when 10
+            then 'Eateria'
+        end
+    ) as payee_name
+from transactions
+cross join transactions_minus_outliers_stats
