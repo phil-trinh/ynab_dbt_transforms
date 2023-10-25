@@ -1,15 +1,15 @@
-{{ config(alias='subtransactions') }}
+{{ config(alias="subtransactions") }}
 
-SELECT
-    id AS subtransaction_id,
+select
+    id as subtransaction_id,
     transaction_id,
-    {{ amounts_to_dollars('amount') }},
+    {{ amounts_to_dollars("amount") }},
     category_id,
     category_name,
     payee_id,
     payee_name,
-    NULLIF(memo, '') AS memo,  -- Null empty memos
+    nullif(memo, '') as memo,  -- Null empty memos
     deleted,
     transfer_transaction_id,
     transfer_account_id
-FROM {{ source('raw', 'subtransactions') }}
+from {{ source("raw", "subtransactions") }}

@@ -1,24 +1,16 @@
-{{ config(alias='transactions') }}
+{{ config(alias="transactions") }}
 
 -- Transactions Translated
-WITH transactions AS (
-    SELECT
-        *
-    FROM
-        {{ ref("transactions_translated") }}
-),
+with
+    transactions as (select * from {{ ref("transactions_translated") }}),
 
--- Categories
-categories AS (
-    SELECT
-        category_id,
-        category_group_name
-    FROM
-        {{ ref("categories_staged") }}
-)
+    -- Categories
+    categories as (
+        select category_id, category_group_name from {{ ref("categories_staged") }}
+    )
 
 -- Enrich transactions with main category groups
-SELECT
+select
     id,
     original_transaction_id,
     subtransaction_id,
@@ -32,7 +24,5 @@ SELECT
     transfer_transaction_id,
     matched_transaction_id,
     subtransaction_flag
-FROM
-    transactions
-    LEFT JOIN
-    categories USING(category_id)
+from transactions
+left join categories using (category_id)

@@ -1,103 +1,85 @@
-{{ config(alias='transactions') }}
+{{ config(alias="transactions") }}
 
 -- Main transactions table
-WITH transactions AS (
-    SELECT
-        transaction_id,
-        date,
-        amount,
-        category_id,
-        category_name,
-        payee_name,
-        account_name,
-        debt_transaction_type,
-        memo,
-        transfer_account_id,
-        transfer_transaction_id,
-        matched_transaction_id
-    FROM
-        {{ ref("transactions_staged") }}
-    WHERE
-        approved = TRUE -- Only approved transactions (i.e. no pending)
-        AND deleted = FALSE -- Only non-deleted transactions
-),
+with
+    transactions as (
+        select
+            transaction_id,
+            date,
+            amount,
+            category_id,
+            category_name,
+            payee_name,
+            account_name,
+            debt_transaction_type,
+            memo,
+            transfer_account_id,
+            transfer_transaction_id,
+            matched_transaction_id
+        from {{ ref("transactions_staged") }}
+        where
+            approved = true  -- Only approved transactions (i.e. no pending)
+            and deleted = false  -- Only non-deleted transactions
+    ),
 
--- Subtransactions that were split from main transactions
-subtransactions AS (
-    SELECT
-        subtransaction_id,
-        transaction_id,
-        amount,
-        category_id,
-        category_name,
-        payee_name,
-        memo,
-        transfer_account_id,
-        transfer_transaction_id
-    FROM
-        {{ ref("subtransactions_staged") }}
-    WHERE
-        deleted = FALSE -- Only non-deleted transactions
-),
+    -- Subtransactions that were split from main transactions
+    subtransactions as (
+        select
+            subtransaction_id,
+            transaction_id,
+            amount,
+            category_id,
+            category_name,
+            payee_name,
+            memo,
+            transfer_account_id,
+            transfer_transaction_id
+        from {{ ref("subtransactions_staged") }}
+        where deleted = false  -- Only non-deleted transactions
+    ),
 
--- Join Transactions with Subtransactions and coalesce common columns
-transactions_joined AS (
-    SELECT
-        CASE
-            WHEN subtransaction_id IS NOT NULL THEN CONCAT_WS('_', transactions.transaction_id, subtransaction_id)
-            ELSE transactions.transaction_id
-        END AS id,
-        transactions.transaction_id AS original_transaction_id,
-        subtransaction_id,
-        transactions.date,
-        COALESCE(
-            subtransactions.amount,
-            transactions.amount
-        ) AS amount,
-        COALESCE(
-            subtransactions.category_id,
-            transactions.category_id
-        ) AS category_id,
-        COALESCE(
-            subtransactions.category_name,
-            transactions.category_name
-        ) AS category_name,
-        account_name,
-        COALESCE(
-            subtransactions.payee_name,
-            transactions.payee_name
-        ) AS payee_name,
-        COALESCE(
-            subtransactions.memo,
-            transactions.memo
-        ) AS memo,
-        COALESCE(
-            subtransactions.transfer_account_id,
-            transactions.transfer_account_id
-        ) AS transfer_account_id,
-        COALESCE(
-            subtransactions.transfer_transaction_id,
-            transactions.transfer_transaction_id
-        ) AS transfer_transaction_id,
-        matched_transaction_id,
-        CASE
-            WHEN subtransaction_id IS NOT NULL THEN TRUE
-            ELSE FALSE
-        END AS subtransaction_flag -- Boolean if transaction came from a subtransaction
-    FROM
-        transactions
-        FULL OUTER JOIN subtransactions
-        ON transactions.transaction_id = subtransactions.transaction_id
-)
-
--- Final select
-SELECT
-    *
-FROM
-    transactions_joined
-WHERE
-    NOT (  -- Remove transfer transactions that were payments to credit cards
-        payee_name LIKE 'Transfer%'
-        AND category_name = 'Uncategorized'
+    -- Join Transactions with Subtransactions and coalesce common columns
+    transactions_joined as (
+        select
+            case
+                when subtransaction_id is not null
+                then concat_ws('_', transactions.transaction_id, subtransaction_id)
+                else transactions.transaction_id
+            end as id,
+            transactions.transaction_id as original_transaction_id,
+            subtransaction_id,
+            transactions.date,
+            coalesce(subtransactions.amount, transactions.amount) as amount,
+            coalesce(
+                subtransactions.category_id, transactions.category_id
+            ) as category_id,
+            coalesce(
+                subtransactions.category_name, transactions.category_name
+            ) as category_name,
+            account_name,
+            coalesce(subtransactions.payee_name, transactions.payee_name) as payee_name,
+            coalesce(subtransactions.memo, transactions.memo) as memo,
+            coalesce(
+                subtransactions.transfer_account_id, transactions.transfer_account_id
+            ) as transfer_account_id,
+            coalesce(
+                subtransactions.transfer_transaction_id,
+                transactions.transfer_transaction_id
+            ) as transfer_transaction_id,
+            matched_transaction_id,
+            case
+                when subtransaction_id is not null then true else false
+            end as subtransaction_flag  -- Boolean if transaction came from a subtransaction
+        from transactions
+        full outer join
+            subtransactions
+            on transactions.transaction_id = subtransactions.transaction_id
     )
 
+-- Final select
+select *
+from transactions_joined
+where
+    not (  -- Remove transfer transactions that were payments to credit cards
+        payee_name like 'Transfer%' and category_name = 'Uncategorized'
+    )
