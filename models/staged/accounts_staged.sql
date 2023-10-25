@@ -3,9 +3,9 @@
 {{ config(
     alias="accounts",
     pre_hook=[
-        "drop table raw.accounts_debt_escrow_amounts cascade",
-        "drop table raw.accounts_debt_interest_rates cascade",
-        "drop table raw.accounts_debt_minimum_payments cascade"
+        "drop table if exists raw.accounts_debt_escrow_amounts cascade",
+        "drop table if exists raw.accounts_debt_interest_rates cascade",
+        "drop table if exists raw.accounts_debt_minimum_payments cascade"
     ]
 ) }}
 
