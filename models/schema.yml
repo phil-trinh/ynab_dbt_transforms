@@ -190,7 +190,7 @@ models:
 
       - name: on_budget
         data_type: boolean
-        description: "Not sure what this is O_o."
+        description: "Whether this account is on budget or not - From YNAB, whatever this means."
         constraints:
           - type: not_null
 

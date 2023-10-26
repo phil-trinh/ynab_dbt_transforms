@@ -20,6 +20,11 @@ where
     payee_name is distinct from 'Starting Balance'  -- Remove all starting balance transactions
     and category_name <> 'Inflow: Ready to Assign'  -- Remove all inflow transactions
 
+    -- Remove transfer transactions
+    and not (
+        payee_name like 'Transfer%' and category_name = 'Uncategorized'
+    )
+
     -- Remove savings, investment, and debt accounts as transactions from these
     -- accounts shouldn't be counted.
     and account_name not in (
