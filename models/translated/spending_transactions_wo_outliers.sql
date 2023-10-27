@@ -15,4 +15,4 @@ with
 -- Calculatate new mean and std. dev. without outliers
 select avg(amount) as avg_wo_outliers, stddev(amount) as std_wo_outliers
 from transactions_z_score
-where -3 > z_score or z_score < 3  -- Remove outliers below -3 and above 3 z-score
+where z_score between -3 and 3  -- Remove outliers below -3 and above 3 z-score
