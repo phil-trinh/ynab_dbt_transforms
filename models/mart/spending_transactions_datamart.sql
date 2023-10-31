@@ -17,8 +17,11 @@ select
     subtransaction_flag
 from {{ ref("fct_transactions") }}
 where
-    payee_name is distinct from 'Starting Balance'  -- Remove all starting balance transactions
-    and category_name <> 'Inflow: Ready to Assign'  -- Remove all inflow transactions
+    -- Remove all starting balance transactions (https://wiki.postgresql.org/wiki/Is_distinct_from)
+    payee_name is distinct from 'Starting Balance'
+
+    -- Remove all inflow transactions
+    and category_name <> 'Inflow: Ready to Assign'
 
     -- Remove transfer transactions
     and not (

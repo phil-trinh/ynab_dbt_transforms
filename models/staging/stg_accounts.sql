@@ -10,9 +10,19 @@
 ) }}
 
 select
-    id,
-    name,
-    type,
+    id as account_id,
+    "name" as account_name,
+    case
+        when "type" = 'otherLiability'
+        then 'Other Liability'
+        when "type" = 'otherAsset'
+        then 'Other Asset'
+        when "type" = 'studentLoan'
+        then 'Student Loan'
+        when "type" = 'creditCard'
+        then 'Credit Card'
+        else initcap("type")
+    end as account_type,
     {{ amounts_to_dollars("balance") }},
     {{ amounts_to_dollars("uncleared_balance") }},
     {{ amounts_to_dollars("cleared_balance") }},

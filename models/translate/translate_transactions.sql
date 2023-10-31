@@ -10,6 +10,7 @@ with
             category_id,
             category_name,
             payee_name,
+            account_id,
             account_name,
             debt_transaction_type,
             memo,
@@ -55,6 +56,7 @@ select
     coalesce(
         subtransactions.category_name, transactions.category_name
     ) as category_name,
+    account_id,
     account_name,
     coalesce(subtransactions.payee_name, transactions.payee_name) as payee_name,
     coalesce(subtransactions.memo, transactions.memo) as memo,

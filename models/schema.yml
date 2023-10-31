@@ -135,20 +135,20 @@ models:
         enforced: true
 
     columns:
-      - name: id
+      - name: account_id
         data_type: text
         description: "Primary Key."
         constraints:
           - type: primary_key
 
-      - name: name
+      - name: account_name
         data_type: text
         description: "Account name."
         constraints:
           - type: unique
           - type: not_null
 
-      - name: type
+      - name: account_type
         data_type: text
         description: "Account Type according to YNAB."
         constraints:
@@ -395,6 +395,12 @@ models:
         constraints:
           - type: not_null
 
+      - name: account_type
+        data_type: text
+        description: "Account type the Transaction came from."
+        constraints:
+          - type: not_null
+
       - name: payee_name
         data_type: text
         description: "Transaction payee."
@@ -414,5 +420,11 @@ models:
       - name: subtransaction_flag
         data_type: boolean
         description: "Matched transaction that is the same as this transaction."
+        constraints:
+          - type: not_null
+
+      - name: transaction_type
+        data_type: text
+        description: "Transaction Types: Income, Expenses, or Starting Balance."
         constraints:
           - type: not_null
