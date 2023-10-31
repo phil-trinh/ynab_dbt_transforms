@@ -15,7 +15,7 @@ select
     transfer_transaction_id,
     matched_transaction_id,
     subtransaction_flag
-from {{ ref("transactions_datamart") }}
+from {{ ref("fct_transactions") }}
 where
     payee_name is distinct from 'Starting Balance'  -- Remove all starting balance transactions
     and category_name <> 'Inflow: Ready to Assign'  -- Remove all inflow transactions

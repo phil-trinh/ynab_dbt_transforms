@@ -2,11 +2,11 @@
 
 -- Transactions Translated
 with
-    transactions as (select * from {{ ref("transactions_translated") }}),
+    transactions as (select * from {{ ref("translate_transactions") }}),
 
     -- Categories
     categories as (
-        select category_id, category_group_name from {{ ref("categories_staged") }}
+        select category_id, category_group_name from {{ ref("stg_categories") }}
     )
 
 -- Enrich transactions with main category groups

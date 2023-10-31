@@ -30,21 +30,21 @@ clean-targets:
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 models:
   ynab_dbt_transforms:
-    staged:
+    staging:
       +materialized: view
-      +schema: staged
-      +tags: staged
+      +schema: staging
+      +tags: staging
       +docs:
         node_color: "#cd7f32"  # bronze hex
-    translated:
+    translate:
       +materialized: view
-      +schema: translated
-      +tags: translated
+      +schema: translate
+      +tags: translate
       +docs:
         node_color: "silver"
-    datamart:
+    mart:
       +materialized: table
-      +schema: datamart
-      +tags: datamart
+      +schema: mart
+      +tags: mart
       +docs:
         node_color: "gold"

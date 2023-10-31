@@ -128,7 +128,7 @@ sources:
 
 
 models:
-  - name: accounts_datamart
+  - name: dim_accounts
     description: "Information on accounts tied to 'Parallel Life' budget in YNAB."
     config:
       contract:
@@ -344,7 +344,7 @@ models:
           - type: not_null
 
 
-  - name: transactions_datamart
+  - name: fct_transactions
     description: "Data model of all transactions in Phil's \"Parallel Life\" budget in YNAB."
     config:
       contract:

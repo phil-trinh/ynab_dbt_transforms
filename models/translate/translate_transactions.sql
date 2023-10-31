@@ -16,7 +16,7 @@ with
             transfer_account_id,
             transfer_transaction_id,
             matched_transaction_id
-        from {{ ref("transactions_staged") }}
+        from {{ ref("stg_transactions") }}
         where
             approved = true  -- Only approved transactions (i.e. no pending)
             and deleted = false  -- Only non-deleted transactions
@@ -34,7 +34,7 @@ with
             memo,
             transfer_account_id,
             transfer_transaction_id
-        from {{ ref("subtransactions_staged") }}
+        from {{ ref("stg_subtransactions") }}
         where deleted = false  -- Only non-deleted transactions
     )
 

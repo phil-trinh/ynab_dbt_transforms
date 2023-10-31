@@ -15,6 +15,6 @@ select
     transfer_payee_id,
     direct_import_linked,
     direct_import_in_error
-from {{ ref("accounts_staged") }}
+from {{ ref("stg_accounts") }}
 where deleted = false
 order by type, name
