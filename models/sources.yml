@@ -77,7 +77,7 @@ sources:
             tests:
               - not_null
               - accepted_values:
-                  name: source_accepted_values_accounts_type
+                  # name: source_accepted_values_accounts_type  # Airbyte dbt does not have "name" as an accepted argument
                   values: ['checking', 'savings', 'cash', 'creditCard', 'lineOfCredit', 'otherAsset', 'otherLiability', 'mortgage', 'autoLoan', 'studentLoan', 'personalLoan', 'medicalDebt', 'otherDebt']
           - name: balance
             description: "Total account balance"
