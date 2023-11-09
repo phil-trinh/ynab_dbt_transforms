@@ -2,7 +2,7 @@
 with
     transactions as (
         select date_trunc('month', "date") as "date", sum(amount) as "sum"
-        from {{ ref("transactions_datamart") }}
+        from {{ ref("fct_transactions") }}
         where account_name not in ('First Parallel Home', 'First Parallel Mortgage')
         group by date_trunc('month', "date")
     )

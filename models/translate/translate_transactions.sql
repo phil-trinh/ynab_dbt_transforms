@@ -10,13 +10,14 @@ with
             category_id,
             category_name,
             payee_name,
+            account_id,
             account_name,
             debt_transaction_type,
             memo,
             transfer_account_id,
             transfer_transaction_id,
             matched_transaction_id
-        from {{ ref("transactions_staged") }}
+        from {{ ref("stg_transactions") }}
         where
             approved = true  -- Only approved transactions (i.e. no pending)
             and deleted = false  -- Only non-deleted transactions
@@ -34,7 +35,7 @@ with
             memo,
             transfer_account_id,
             transfer_transaction_id
-        from {{ ref("subtransactions_staged") }}
+        from {{ ref("stg_subtransactions") }}
         where deleted = false  -- Only non-deleted transactions
     )
 
@@ -55,6 +56,7 @@ select
     coalesce(
         subtransactions.category_name, transactions.category_name
     ) as category_name,
+    account_id,
     account_name,
     coalesce(subtransactions.payee_name, transactions.payee_name) as payee_name,
     coalesce(subtransactions.memo, transactions.memo) as memo,

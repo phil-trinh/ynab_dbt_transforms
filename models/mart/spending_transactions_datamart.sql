@@ -15,10 +15,13 @@ select
     transfer_transaction_id,
     matched_transaction_id,
     subtransaction_flag
-from {{ ref("transactions_datamart") }}
+from {{ ref("fct_transactions") }}
 where
-    payee_name is distinct from 'Starting Balance'  -- Remove all starting balance transactions
-    and category_name <> 'Inflow: Ready to Assign'  -- Remove all inflow transactions
+    -- Remove all starting balance transactions (https://wiki.postgresql.org/wiki/Is_distinct_from)
+    payee_name is distinct from 'Starting Balance'
+
+    -- Remove all inflow transactions
+    and category_name <> 'Inflow: Ready to Assign'
 
     -- Remove transfer transactions
     and not (
@@ -42,4 +45,11 @@ where
         'Seagate HSA',
         'Student Loan',
         'Student Loan (Original)'
+    )
+
+    and memo not in (
+        'Federal Tax Payment 😕',
+        'For dad to borrow',
+        'Part 1 of dad’s repayment',
+        'Withdrawal of Roth IRA contributions for 2022'
     )

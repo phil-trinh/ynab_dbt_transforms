@@ -1,154 +1,27 @@
 version: 2
 
-sources:
-  - name: raw
-    description: "Raw YNAB budget data from YNAB API."
-    loader: airbyte
-    tags: [raw]
-    tables:
-      - name: transactions
-        description: "Transactions data for main budget in YNAB."
-        columns:
-          - name: id
-            description: "Primary key"
-            data_type: text
-            tests:
-              - unique
-              - not_null
-          - name: amount
-            description: "Transaction amount (in cents)"
-            data_type: float8
-            tests:
-              - not_null
-          - name: date
-            description: "Date of transaction"
-            data_type: date
-            tests:
-              - not_null
-          - name: account_name
-            description: "Account associated with transaction"
-            data_type: text
-            tests:
-              - not_null
-          - name: category_name
-            description: "Transaction category name"
-            data_type: text
-            tests:
-              - not_null
-        freshness:
-          warn_after:
-            count: 7
-            period: day
-          # error_after:
-          #   count: <positive_integer>
-          #   period: minute | hour | day
-          # filter: <boolean_sql_expression>
-        loaded_at_field: _airbyte_emitted_at
-
-      - name: subtransactions
-        identifier: transactions_subtransactions
-        description: "Sub-transactions data for main budget in YNAB for transactions that have been split."
-        columns:
-          - name: id
-            description: "Primary key"
-            tests:
-              - unique
-              - not_null
-          - name: amount
-            description: "Transaction amount (in cents)"
-            tests:
-              - not_null
-          - name: category_name
-            description: "Transaction category name"
-            tests:
-              - not_null
-
-      - name: accounts
-        identifier: accounts
-        description: "Information on accounts tied to 'Parallel Life' budget in YNAB."
-        columns:
-          - name: id
-            description: "Primary key"
-            tests:
-              - unique
-              - not_null
-          - name: type
-            description: "Account type category"
-            tests:
-              - not_null
-          - name: balance
-            description: "Total account balance"
-            tests:
-              - not_null
-          - name: name
-            description: "Account name"
-            tests:
-              - not_null
-          - name: closed
-            description: "Whether the account is closed or not"
-            tests:
-              - not_null
-
-      - name: category_groups
-        identifier: categories_categories
-        description: "Main category groups for main budget in YNAB."
-        columns:
-          - name: id
-            description: "Primary key"
-            tests:
-              - unique
-              - not_null
-          - name: name
-            description: "Category name"
-            tests:
-              - unique
-              - not_null
-          - name: category_group_id
-            description: "ID of Category Group"
-            tests:
-              - not_null
-          - name: category_group_name
-            description: "Category Group Name"
-            tests:
-              - not_null
-
-      - name: categories
-        description: "Granular categories for main budget in YNAB."
-        columns:
-          - name: id
-            description: "Primary key"
-            tests:
-              - unique
-              - not_null
-          - name: name
-            description: "Category group name"
-            tests:
-              - unique
-              - not_null
-
-
 models:
-  - name: accounts_datamart
+  - name: dim_accounts
     description: "Information on accounts tied to 'Parallel Life' budget in YNAB."
     config:
       contract:
         enforced: true
 
     columns:
-      - name: id
+      - name: account_id
         data_type: text
         description: "Primary Key."
         constraints:
           - type: primary_key
 
-      - name: name
+      - name: account_name
         data_type: text
         description: "Account name."
         constraints:
           - type: unique
           - type: not_null
 
-      - name: type
+      - name: account_type
         data_type: text
         description: "Account Type according to YNAB."
         constraints:
@@ -344,7 +217,7 @@ models:
           - type: not_null
 
 
-  - name: transactions_datamart
+  - name: fct_transactions
     description: "Data model of all transactions in Phil's \"Parallel Life\" budget in YNAB."
     config:
       contract:
@@ -395,6 +268,12 @@ models:
         constraints:
           - type: not_null
 
+      - name: account_type
+        data_type: text
+        description: "Account type the Transaction came from."
+        constraints:
+          - type: not_null
+
       - name: payee_name
         data_type: text
         description: "Transaction payee."
@@ -416,3 +295,13 @@ models:
         description: "Matched transaction that is the same as this transaction."
         constraints:
           - type: not_null
+
+      - name: transaction_type
+        data_type: text
+        description: "Transaction Types: Income, Expenses, or Starting Balance."
+        constraints:
+          - type: not_null
+        tests:
+        - accepted_values:
+            # name: mart_accepted_values_transactions_type  # Airbyte dbt does not have "name" as an accepted argument
+            values: ['Income', 'Expense', 'Mortgage Payment', 'Credit Card Payment', 'Transfer', 'NA']
