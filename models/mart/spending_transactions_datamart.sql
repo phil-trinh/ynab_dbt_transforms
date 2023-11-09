@@ -46,3 +46,10 @@ where
         'Student Loan',
         'Student Loan (Original)'
     )
+
+    and memo not in (
+        'Federal Tax Payment 😕',
+        'For dad to borrow',
+        'Part 1 of dad’s repayment',
+        'Withdrawal of Roth IRA contributions for 2022'
+    )
