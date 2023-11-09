@@ -48,3 +48,6 @@ models:
       +tags: mart
       +docs:
         node_color: "gold"
+
+on-run-end:
+  - '{% for schema in schemas %}grant usage on schema {{ schema }} to "READER";{% endfor %}'
