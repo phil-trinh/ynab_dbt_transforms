@@ -29,6 +29,8 @@ clean-targets:
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 models:
+  +grants:
+    select: ['"READER"']
   ynab_dbt_transforms:
     staging:
       +materialized: view
