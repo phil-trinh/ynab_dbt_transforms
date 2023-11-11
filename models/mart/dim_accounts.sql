@@ -3,7 +3,11 @@
 select
     account_id,
     account_name,
-    account_type,
+    case
+        when account_type = 'Other Asset' and account_name <> 'First Parallel Home'
+        then 'Retirement'
+        else account_type
+    end as account_type,
     balance,
     uncleared_balance,
     cleared_balance,

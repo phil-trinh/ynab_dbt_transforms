@@ -190,7 +190,13 @@ models:
 
       - name: account_name
         data_type: text
-        description: "Account the Transaction came from."
+        description: "Account the transaction occured."
+        constraints:
+          - type: not_null
+
+      - name: account_type
+        data_type: text
+        description: "Type of account the transaction occured."
         constraints:
           - type: not_null
 
@@ -215,6 +221,16 @@ models:
         description: "Matched transaction that is the same as this transaction."
         constraints:
           - type: not_null
+
+      - name: transaction_type
+        data_type: text
+        description: "Transaction Types: Income, Expenses, or Starting Balance."
+        constraints:
+          - type: not_null
+        tests:
+        - accepted_values:
+            # name: mart_accepted_values_transactions_type  # Airbyte dbt does not have "name" as an accepted argument
+            values: ['Income', 'Expense', 'Mortgage Payment', 'Credit Card Payment', 'Transfer', 'Retirement Savings', 'NA']
 
 
   - name: fct_transactions
@@ -264,13 +280,13 @@ models:
 
       - name: account_name
         data_type: text
-        description: "Account the Transaction came from."
+        description: "Account the transaction occured."
         constraints:
           - type: not_null
 
       - name: account_type
         data_type: text
-        description: "Account type the Transaction came from."
+        description: "Type of account the transaction occured."
         constraints:
           - type: not_null
 
