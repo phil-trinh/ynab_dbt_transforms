@@ -13,7 +13,7 @@ with
 
     -- Accounts
     accounts as (
-        select account_id, account_name, account_type from {{ ref("stg_accounts") }}
+        select account_id, account_name, account_type from {{ ref("dim_accounts") }}
     )
 
 -- Enrich transactions with main category groups
@@ -37,8 +37,14 @@ select
         when (category_name like 'Inflow%') and (payee_name <> 'Starting Balance' or payee_name is null)
         then 'Income'
 
-        -- Starting balance is not a type
-        when (category_name like 'Inflow%') and (payee_name = 'Starting Balance')
+        -- Starting balance and transactions in certain account types don't have a type
+        when ((category_name like 'Inflow%') and (payee_name = 'Starting Balance'))
+            or (account_type in (
+                'Mortgage',
+                'Other Liability',
+                'Other Asset',
+                'Student Loan'
+            ))
         then 'NA'
 
         -- Mortgage payments
@@ -54,7 +60,7 @@ select
         then 'Transfer'
 
         -- Roth IRA Transfers
-        when (payee_name = 'Transfer : Roth IRA')
+        when (payee_name = 'Transfer : Roth IRA') or account_type = 'Retirement'
         then 'Retirement Savings'
 
         -- All other transactions are expenses
