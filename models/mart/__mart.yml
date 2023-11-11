@@ -304,4 +304,4 @@ models:
         tests:
         - accepted_values:
             # name: mart_accepted_values_transactions_type  # Airbyte dbt does not have "name" as an accepted argument
-            values: ['Income', 'Expense', 'Mortgage Payment', 'Credit Card Payment', 'Transfer', 'NA']
+            values: ['Income', 'Expense', 'Mortgage Payment', 'Credit Card Payment', 'Transfer', 'Retirement Savings', 'NA']

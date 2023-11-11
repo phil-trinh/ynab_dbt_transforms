@@ -53,9 +53,15 @@ select
         when (payee_name like 'Transfer%') and (category_name = 'Uncategorized') and (account_type <> 'Mortgage')
         then 'Transfer'
 
+        -- Roth IRA Transfers
+        when (payee_name = 'Transfer : Roth IRA')
+        then 'Retirement Savings'
+
         -- All other transactions are expenses
         when not (category_name like 'Inflow%')
         then 'Expense'
+
+    --  No else case to make sure we catch any other types that we didn't account for.
     end as transaction_type
 from transactions
 left join categories using (category_id)
