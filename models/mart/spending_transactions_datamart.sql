@@ -19,8 +19,8 @@ select
     transaction_type
 from {{ ref("fct_transactions") }}
 where
-    -- Expense transaction types only
-    transaction_type = 'Expense'
+    -- Expense and mortgage payment transaction types only
+    transaction_type in ('Expense', 'Mortgage Payment')
 
     and memo not in (
         'Federal Tax Payment 😕',
