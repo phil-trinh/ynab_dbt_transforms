@@ -37,16 +37,6 @@ select
         when (category_name like 'Inflow%') and (payee_name <> 'Starting Balance' or payee_name is null)
         then 'Income'
 
-        -- Starting balance and transactions in certain account types don't have a type
-        when ((category_name like 'Inflow%') and (payee_name = 'Starting Balance'))
-            or (account_type in (
-                'Mortgage',
-                'Other Liability',
-                'Other Asset',
-                'Student Loan'
-            ))
-        then 'NA'
-
         -- Mortgage payments
         when (payee_name like 'Transfer%') and (category_name = 'Uncategorized') and (account_type = 'Mortgage')
         then 'Mortgage Payment'
@@ -62,6 +52,10 @@ select
         -- Roth IRA Transfers
         when (payee_name = 'Transfer : Roth IRA') or account_type = 'Retirement'
         then 'Retirement Savings'
+
+        -- Starting balance or other Mortgage transactions are N/A types
+        when (payee_name = 'Starting Balance') or (account_type in ('Mortgage', 'Other Liability', 'Other Asset'))
+        then 'NA'
 
         -- All other transactions are expenses
         when not (category_name like 'Inflow%')
