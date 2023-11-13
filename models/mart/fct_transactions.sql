@@ -10,9 +10,7 @@ with
     ),
 
     -- Main Accounts
-    accounts as (
-        select account_id, account_type from {{ ref("dim_accounts") }}
-    ),
+    accounts as (select account_id, account_type from {{ ref("dim_accounts") }}),
 
     -- Transfer Accounts
     transfer_accounts as (
@@ -95,4 +93,5 @@ with
         from enriched_transactions
     )
 
-select * from final
+select *
+from final
