@@ -26,6 +26,10 @@ models:
         description: "Account Type according to YNAB."
         constraints:
           - type: not_null
+        tests:
+        - accepted_values:
+            # name: unexpected_account_types  # Airbyte dbt does not have "name" as an accepted argument
+            values: ['Cash', 'Checking', 'Credit Card', 'Mortgage', 'Other Asset', 'Other Liability', 'Retirement', 'Savings', 'Student Loan']
 
       - name: balance
         data_type: float8
@@ -298,6 +302,18 @@ models:
         data_type: text
         description: "Transaction comments."
 
+      - name: transfer_account_id
+        data_type: text
+        description: "Account ID of transaction being transferred to."
+
+      - name: transfer_account_name
+        data_type: text
+        description: "Account Name of transaction being transferred to."
+
+      - name: transfer_account_type
+        data_type: text
+        description: "Account Type of transaction being transferred to."
+
       - name: transfer_transaction_id
         data_type: text
         description: "Corresponding transaction that transferred amount to/from."
@@ -320,4 +336,4 @@ models:
         tests:
         - accepted_values:
             # name: mart_accepted_values_transactions_type  # Airbyte dbt does not have "name" as an accepted argument
-            values: ['Income', 'Expense', 'Mortgage Payment', 'Credit Card Payment', 'Transfer', 'Retirement Savings', 'NA']
+            values: ['Credit Card Payment', 'Expense', 'Income', 'Mortgage Payment', 'NA', 'Retirement Savings', 'Transfer']
