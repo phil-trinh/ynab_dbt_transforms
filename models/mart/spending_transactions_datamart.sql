@@ -22,9 +22,12 @@ where
     -- Expense and mortgage payment transaction types only
     transaction_type in ('Expense', 'Mortgage Payment')
 
-    and memo not in (
-        'Federal Tax Payment 😕',
-        'For dad to borrow',
-        'Part 1 of dad’s repayment',
-        'Withdrawal of Roth IRA contributions for 2022'
+    and (
+        memo not in (
+            'Federal Tax Payment 😕',
+            'For dad to borrow',
+            'Part 1 of dad’s repayment',
+            'Withdrawal of Roth IRA contributions for 2022'
+        )
+        or memo is null
     )
