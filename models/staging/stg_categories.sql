@@ -20,6 +20,6 @@ select
     goal_target_month,
     goal_creation_month,
     nullif(note, '') as note,  -- Null empty notes
-    deleted,
-    hidden
+    deleted as is_deleted,
+    hidden as is_hidden
 from {{ source("raw", "category_groups") }}

@@ -10,12 +10,12 @@ with  -- Transactions Translated
 
 -- Cross Join to get outliers and mask all other personal values
 select
-    id,
-    date,
+    transaction_id,
+    transaction_date,
 
     -- New amount column, randomly picked based on current distribution
     round(cast(random_normal(avg_wo_outliers, std_wo_outliers) as numeric), 2)::float
-    as amount,
+    as transaction_amount,
     category_group_name,
 
     -- Alias personal category names

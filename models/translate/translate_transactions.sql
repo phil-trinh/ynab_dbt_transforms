@@ -5,22 +5,22 @@ with
     transactions as (
         select
             transaction_id,
-            date,
-            amount,
+            transaction_date,
+            transaction_amount,
             category_id,
             category_name,
             payee_name,
             account_id,
             account_name,
             debt_transaction_type,
-            memo,
+            transaction_memo,
             transfer_account_id,
             transfer_transaction_id,
             matched_transaction_id
         from {{ ref("stg_transactions") }}
         where
-            approved = true  -- Only approved transactions (i.e. no pending)
-            and deleted = false  -- Only non-deleted transactions
+            is_approved = true  -- Only approved transactions (i.e. no pending)
+            and is_deleted = false  -- Only non-deleted transactions
     ),
 
     -- Subtransactions that were split from main transactions
@@ -28,15 +28,15 @@ with
         select
             subtransaction_id,
             transaction_id,
-            amount,
+            transaction_amount,
             category_id,
             category_name,
             payee_name,
-            memo,
+            transaction_memo,
             transfer_account_id,
             transfer_transaction_id
         from {{ ref("stg_subtransactions") }}
-        where deleted = false  -- Only non-deleted transactions
+        where is_deleted = false  -- Only non-deleted transactions
     )
 
 -- Join Transactions with Subtransactions and coalesce common columns
@@ -45,11 +45,11 @@ select
         when subtransaction_id is not null
         then concat_ws('_', transactions.transaction_id, subtransaction_id)
         else transactions.transaction_id
-    end as id,
+    end as transaction_id,
     transactions.transaction_id as original_transaction_id,
     subtransaction_id,
-    transactions.date,
-    coalesce(subtransactions.amount, transactions.amount) as amount,
+    transactions.transaction_date,
+    coalesce(subtransactions.transaction_amount, transactions.transaction_amount) as transaction_amount,
     coalesce(
         subtransactions.category_id, transactions.category_id
     ) as category_id,
@@ -59,7 +59,7 @@ select
     account_id,
     account_name,
     coalesce(subtransactions.payee_name, transactions.payee_name) as payee_name,
-    coalesce(subtransactions.memo, transactions.memo) as memo,
+    coalesce(subtransactions.transaction_memo, transactions.transaction_memo) as transaction_memo,
     coalesce(
         subtransactions.transfer_account_id, transactions.transfer_account_id
     ) as transfer_account_id,

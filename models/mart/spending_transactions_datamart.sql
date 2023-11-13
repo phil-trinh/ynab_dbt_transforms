@@ -2,17 +2,17 @@
 
 -- Flip the sign for spend in positive
 select
-    id,
+    transaction_id,
     original_transaction_id,
     subtransaction_id,
-    date,
-    (amount * -1) as amount,
+    transaction_date,
+    (transaction_amount * -1) as transaction_amount,
     category_group_name,
     category_name,
     account_name,
     account_type,
     payee_name,
-    memo,
+    transaction_memo,
     transfer_transaction_id,
     matched_transaction_id,
     subtransaction_flag,
@@ -23,11 +23,11 @@ where
     transaction_type in ('Expense', 'Mortgage Payment')
 
     and (
-        memo not in (
+        transaction_memo not in (
             'Federal Tax Payment 😕',
             'For dad to borrow',
             'Part 1 of dad’s repayment',
             'Withdrawal of Roth IRA contributions for 2022'
         )
-        or memo is null
+        or transaction_memo is null
     )
