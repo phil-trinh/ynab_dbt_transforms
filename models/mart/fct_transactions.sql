@@ -2,17 +2,15 @@
 
 with
     -- Transactions Translated
-    transactions as (select * from {{ ref("translate_transactions") }}),
+    transactions as (select * from {{ ref("transactions_translated") }}),
 
     -- Categories
     categories as (
-        select category_id, category_group_name from {{ ref("stg_categories") }}
+        select category_id, category_group_name from {{ ref("stg_ynab__categories") }}
     ),
 
     -- Main Accounts
-    accounts as (
-        select account_id, account_type from {{ ref("dim_accounts") }}
-    ),
+    accounts as (select account_id, account_type from {{ ref("dim_accounts") }}),
 
     -- Transfer Accounts
     transfer_accounts as (
@@ -26,17 +24,17 @@ with
     -- Enrich transactions with main category groups
     enriched_transactions as (
         select
-            id,
+            transaction_id,
             original_transaction_id,
             subtransaction_id,
-            date,
-            amount,
+            transaction_date,
+            transaction_amount,
             category_group_name,
             category_name,
             account_name,
             account_type,
             payee_name,
-            memo,
+            transaction_memo,
             transactions.transfer_account_id,
             transfer_account_name,
             transfer_account_type,
@@ -95,4 +93,5 @@ with
         from enriched_transactions
     )
 
-select * from final
+select *
+from final

@@ -31,41 +31,41 @@ models:
             # name: unexpected_account_types  # Airbyte dbt does not have "name" as an accepted argument
             values: ['Cash', 'Checking', 'Credit Card', 'Mortgage', 'Other Asset', 'Other Liability', 'Retirement', 'Savings', 'Student Loan']
 
-      - name: balance
+      - name: account_balance
         data_type: float8
         description: "Total account balance."
         constraints:
           - type: not_null
 
-      - name: uncleared_balance
+      - name: account_uncleared_balance
         data_type: float8
         description: "Balance of uncleared transactions in the account."
         constraints:
           - type: not_null
 
-      - name: cleared_balance
+      - name: account_cleared_balance
         data_type: float8
         description: "Balance of cleared transactions in the account."
         constraints:
           - type: not_null
 
-      - name: note
+      - name: account_note
         data_type: text
         description: "Extra note tied to account."
 
-      - name: deleted
+      - name: is_deleted
         data_type: boolean
         description: "Account is deleted from the budget."
         constraints:
           - type: not_null
 
-      - name: closed
+      - name: is_closed
         data_type: boolean
         description: "Account is closed in the budget."
         constraints:
           - type: not_null
 
-      - name: on_budget
+      - name: is_on_budget
         data_type: boolean
         description: "Whether this account is on budget or not - From YNAB, whatever this means."
         constraints:
@@ -102,19 +102,19 @@ models:
         enforced: true
 
     columns:
-      - name: id
+      - name: transaction_id
         data_type: text
         description: "Primary Key with subtransactions having the their IDs concatenated with the original transaction ID."
         constraints:
           - type: primary_key
 
-      - name: date
+      - name: transaction_date
         data_type: date
         description: "Date of transaction."
         constraints:
           - type: not_null
 
-      - name: amount
+      - name: transaction_amount
         data_type: float8
         description: "Transaction amount. Positive is spending, negative is refunds/reimbursements."
         constraints:
@@ -152,7 +152,7 @@ models:
         enforced: true
 
     columns:
-      - name: id
+      - name: transaction_id
         data_type: text
         description: "Primary Key with subtransactions having the their IDs concatenated with the original transaction ID."
         constraints:
@@ -168,13 +168,13 @@ models:
         data_type: text
         description: "Subtransaction ID if record is of a subtransaction. Otherwise, null."
 
-      - name: date
+      - name: transaction_date
         data_type: date
         description: "Date of transaction."
         constraints:
           - type: not_null
 
-      - name: amount
+      - name: transaction_amount
         data_type: float8
         description: "Transaction amount. Positive is spending, negative is refunds/reimbursements."
         constraints:
@@ -208,7 +208,7 @@ models:
         data_type: text
         description: "Transaction payee."
 
-      - name: memo
+      - name: transaction_memo
         data_type: text
         description: "Transaction comments."
 
@@ -244,7 +244,7 @@ models:
         enforced: true
 
     columns:
-      - name: id
+      - name: transaction_id
         data_type: text
         description: "Primary Key with subtransactions having the their IDs concatenated with the original transaction ID."
         constraints:
@@ -260,13 +260,13 @@ models:
         data_type: text
         description: "Subtransaction ID if record is of a subtransaction. Otherwise, null."
 
-      - name: date
+      - name: transaction_date
         data_type: date
         description: "Date of transaction."
         constraints:
           - type: not_null
 
-      - name: amount
+      - name: transaction_amount
         data_type: float8
         description: "Transaction amount. Positive is spending, negative is refunds/reimbursements."
         constraints:
@@ -298,7 +298,7 @@ models:
         data_type: text
         description: "Transaction payee."
 
-      - name: memo
+      - name: transaction_memo
         data_type: text
         description: "Transaction comments."
 
