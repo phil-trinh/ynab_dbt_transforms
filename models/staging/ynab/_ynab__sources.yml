@@ -114,17 +114,3 @@ sources:
             description: "Category Group Name"
             tests:
               - not_null
-
-      - name: categories
-        description: "Granular categories for main budget in YNAB."
-        columns:
-          - name: id
-            description: "Primary key"
-            tests:
-              - unique
-              - not_null
-          - name: name
-            description: "Category group name"
-            tests:
-              - unique
-              - not_null
