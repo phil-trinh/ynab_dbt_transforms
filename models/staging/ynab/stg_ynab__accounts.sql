@@ -35,7 +35,7 @@ with
             on_budget as is_on_budget,
             (
                 to_timestamp(
-                    last_reconciled_at, 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'
+                    last_reconciled_at, 'YYYY-MM-DD"T"HH24:MI:SS"Z"'
                 )::timestamp
                 with time zone at time zone '+8'
             ) as last_reconciled_at,
