@@ -1,4 +1,9 @@
-{{ config(alias="spending_transactions_wo_outliers") }}
+{{
+    config(
+        alias = "spending_transactions_wo_outliers",
+        materialized = "ephemeral"
+    )
+ }}
 
 with
     -- Select only transaction amounts

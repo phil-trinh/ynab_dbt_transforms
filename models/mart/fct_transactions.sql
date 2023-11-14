@@ -2,7 +2,7 @@
 
 with
     -- Transactions Translated
-    transactions as (select * from {{ ref("translate_transactions") }}),
+    transactions as (select * from {{ ref("transactions_translated") }}),
 
     -- Categories
     categories as (
