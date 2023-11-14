@@ -17,7 +17,7 @@ with
             transfer_account_id,
             transfer_transaction_id,
             matched_transaction_id
-        from {{ ref("stg_transactions") }}
+        from {{ ref("stg_ynab__transactions") }}
         where
             is_approved = true  -- Only approved transactions (i.e. no pending)
             and is_deleted = false  -- Only non-deleted transactions
@@ -35,7 +35,7 @@ with
             transaction_memo,
             transfer_account_id,
             transfer_transaction_id
-        from {{ ref("stg_subtransactions") }}
+        from {{ ref("stg_ynab__subtransactions") }}
         where is_deleted = false  -- Only non-deleted transactions
     ),
 

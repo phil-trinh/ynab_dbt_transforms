@@ -23,7 +23,7 @@ with
             transfer_payee_id,
             direct_import_linked,
             direct_import_in_error
-        from {{ ref("stg_accounts") }}
+        from {{ ref("stg_ynab__accounts") }}
         where is_deleted = false
         order by account_type, account_name
     )

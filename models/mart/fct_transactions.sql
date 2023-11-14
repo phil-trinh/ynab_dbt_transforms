@@ -6,7 +6,7 @@ with
 
     -- Categories
     categories as (
-        select category_id, category_group_name from {{ ref("stg_categories") }}
+        select category_id, category_group_name from {{ ref("stg_ynab__categories") }}
     ),
 
     -- Main Accounts

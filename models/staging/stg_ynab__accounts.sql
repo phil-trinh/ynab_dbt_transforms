@@ -1,8 +1,8 @@
 {# Drop Account Debt tables that end up being blank from being dropped at the Airbyte ingestion #}
 {{
     config(
-        alias="accounts",
-        pre_hook=[
+        alias = "accounts",
+        pre_hook = [
             "drop table if exists raw.accounts_debt_escrow_amounts cascade",
             "drop table if exists raw.accounts_debt_interest_rates cascade",
             "drop table if exists raw.accounts_debt_minimum_payments cascade",
@@ -14,7 +14,7 @@ with
     final as (
         select
             id as account_id,
-            "name" as account_name,
+            name as account_name,
             case
                 when "type" = 'otherLiability'
                 then 'Other Liability'
