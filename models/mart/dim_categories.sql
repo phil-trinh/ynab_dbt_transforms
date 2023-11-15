@@ -3,10 +3,10 @@
 with
     final as (
         select
-            category_group_id,
-            category_group_name,
             category_id,
             category_name,
+            category_group_id,
+            category_group_name,
             category_note,
             category_activity,
             category_budgeted,
@@ -22,7 +22,6 @@ with
             category_goal_months_to_budget,
             category_goal_target_month,
             category_goal_creation_month,
-            is_deleted,
             is_hidden
         from {{ ref("stg_ynab__categories") }}
         where is_deleted = false
