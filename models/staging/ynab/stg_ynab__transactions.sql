@@ -5,7 +5,7 @@ with
         select
             id as transaction_id,
             to_date(date, 'yyyy-mm-dd') as transaction_date,
-            {{ amounts_to_dollars("amount", "transaction_amount") }},
+            {{ amounts_to_dollars("amount") }} as transaction_amount,
             category_id,
             category_name,
             account_id,

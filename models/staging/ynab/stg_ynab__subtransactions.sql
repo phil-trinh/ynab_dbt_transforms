@@ -5,7 +5,7 @@ with
         select
             id as subtransaction_id,
             transaction_id,
-            {{ amounts_to_dollars("amount", "transaction_amount") }},
+            {{ amounts_to_dollars("amount") }} as transaction_amount,
             category_id,
             category_name,
             payee_id,

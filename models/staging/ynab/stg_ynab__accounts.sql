@@ -16,19 +16,19 @@ with
             id as account_id,
             name as account_name,
             case
-                when "type" = 'otherLiability'
-                then 'Other Liability'
-                when "type" = 'otherAsset'
-                then 'Other Asset'
-                when "type" = 'studentLoan'
-                then 'Student Loan'
                 when "type" = 'creditCard'
                 then 'Credit Card'
+                when "type" = 'otherAsset'
+                then 'Other Asset'
+                when "type" = 'otherLiability'
+                then 'Other Liability'
+                when "type" = 'studentLoan'
+                then 'Student Loan'
                 else initcap("type")
             end as account_type,
-            {{ amounts_to_dollars("balance", "account_balance") }},
-            {{ amounts_to_dollars("uncleared_balance", "account_uncleared_balance") }},
-            {{ amounts_to_dollars("cleared_balance", "account_cleared_balance") }},
+            {{ amounts_to_dollars("balance") }} as account_balance,
+            {{ amounts_to_dollars("uncleared_balance") }} as account_uncleared_balance,
+            {{ amounts_to_dollars("cleared_balance") }} as account_cleared_balance,
             nullif(note, '') as account_note,  -- Null empty notes
             deleted as is_deleted,
             closed as is_closed,
