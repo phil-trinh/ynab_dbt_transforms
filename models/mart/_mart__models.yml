@@ -29,23 +29,24 @@ models:
         tests:
         - accepted_values:
             # name: unexpected_account_types  # Airbyte dbt does not have "name" as an accepted argument
-            values: ['Cash', 'Checking', 'Credit Card', 'Mortgage', 'Other Asset', 'Other Liability', 'Retirement', 'Savings', 'Student Loan']
+            values: ['Cash', 'Checking', 'Credit Card', 'Mortgage', 'Other Asset', 'Other Liability', 'Retirement',
+              'Savings', 'Student Loan']
 
       - name: account_balance
         data_type: float8
-        description: "Total account balance."
+        description: "Current balance of the account."
         constraints:
           - type: not_null
 
       - name: account_uncleared_balance
         data_type: float8
-        description: "Balance of uncleared transactions in the account."
+        description: "Current balance of uncleared transactions in the account."
         constraints:
           - type: not_null
 
       - name: account_cleared_balance
         data_type: float8
-        description: "Balance of cleared transactions in the account."
+        description: "Current balance of cleared transactions in the account."
         constraints:
           - type: not_null
 
@@ -73,30 +74,137 @@ models:
 
       - name: last_reconciled_at
         data_type: timestamp with time zone
-        description: "Last timestamp the account got reconciled at."
+        description: "A date/time specifying when the account was last reconciled."
 
       - name: transfer_payee_id
         data_type: text
-        description: "Payee ID for account that's used for transfer transactions between accounts."
+        description: "The payee id which should be used when transferring to this account."
         constraints:
           - type: not_null
 
       - name: direct_import_linked
         data_type: boolean
-        description: "Denoting if account is linked to a direct import connection."
+        description: "Whether or not the account is linked to a financial institution for automatic transaction import."
         constraints:
           - type: not_null
 
       - name: direct_import_in_error
         data_type: boolean
-        description: "Denoting if direct import connection for account is currently erroring out."
+        description: "If an account linked to a financial institution (direct_import_linked=true) and the linked
+          connection is not in a healthy state, this will be true."
         constraints:
           - type: not_null
 
 
+  - name: dim_categories
+    description: "Information on accounts tied to 'Parallel Life' budget in YNAB."
+    config:
+      contract:
+        enforced: true
+
+    columns:
+      - name: category_id
+        data_type: text
+        description: "Budget category primary key."
+        constraints:
+          - type: primary_key
+
+      - name: category_name
+        data_type: text
+        description: "Budget category name."
+        constraints:
+          - type: unique
+          - type: not_null
+
+      - name: category_group_id
+        data_type: text
+        description: "Major category identifier."
+        constraints:
+          - type: not_null
+
+      - name: category_group_name
+        data_type: text
+        description: "Major category name."
+        constraints:
+          - type: not_null
+
+      - name: category_note
+        data_type: text
+        description: "Extra category notes."
+
+      - name: category_activity
+        data_type: float8
+        description: "Current category activity amount. i.e. total of transaction amounts associated with category."
+
+      - name: category_budgeted
+        data_type: float8
+        description: "Current category budgeted amount. i.e. total amount budgeted to this category"
+
+      - name: category_balance
+        data_type: float8
+        description: "Current category balance amount. category_activity minus category_budgeted"
+
+      - name: category_goal_type
+        data_type: text
+        description: "The type of goal, if the category has a goal (TB='Target Category Balance', TBD='Target Category
+          Balance by Date', MF='Monthly Funding', NEED='Plan Your Spending')."
+        tests:
+        - accepted_values:
+            # name: mart_accepted_values_category_goal_type  # Airbyte dbt does not have "name" as an accepted argument
+            values: ['TB', 'TBD', 'MF', 'NEED', 'DEBT']
+
+      - name: category_goal_target
+        data_type: float8
+        description: "Category goal target amount."
+
+      - name: category_goal_cadence
+        data_type: smallint
+        description: '{{ doc("category_goal_cadence") }}'
+
+      - name: category_goal_cadence_frequency
+        data_type: smallint
+        description: '{{ doc("category_goal_cadence_frequency") }}'
+
+      - name: category_goal_percentage_complete
+        data_type: float4
+        description: "The percentage completion of the goal."
+
+      - name: category_goal_overall_funded
+        data_type: float8
+        description: "The total amount funded towards the goal within the current goal period."
+
+      - name: category_goal_overall_left
+        data_type: float8
+        description: "The amount of funding still needed to complete the goal within the current goal period."
+
+      - name: category_goal_under_funded
+        data_type: float8
+        description: "The amount of funding still needed in the current month to stay on track towards completing the
+          goal within the current goal period."
+
+      - name: category_goal_months_to_budget
+        data_type: smallint
+        description: "The number of months, including the current month, left in the current goal period."
+
+      - name: category_goal_target_month
+        data_type: text
+        description: "The original target month for the goal to be completed. Only some goal types specify this date."
+
+      - name: category_goal_creation_month
+        data_type: text
+        description: "The month a goal was created."
+
+      - name: is_hidden
+        data_type: boolean
+        description: "Whether or not the category group is hidden."
+        constraints:
+          - type: not_null
+
+
+
   - name: spending_transactions_datamart_demo
-    description: "Data model of all spending transactions for demonstration purposes. Data has been scrubbed for personal information and amounts
-                  have been randomly generated based on distribution of actuals."
+    description: "Data model of all spending transactions for demonstration purposes. Data has been scrubbed for
+      personal information and amounts have been randomly generated based on distribution of actuals."
     config:
       contract:
         enforced: true
@@ -104,7 +212,8 @@ models:
     columns:
       - name: transaction_id
         data_type: text
-        description: "Primary Key with subtransactions having the their IDs concatenated with the original transaction ID."
+        description: "Primary Key with subtransactions having the their IDs concatenated with the original transaction
+          ID."
         constraints:
           - type: primary_key
 
@@ -154,7 +263,8 @@ models:
     columns:
       - name: transaction_id
         data_type: text
-        description: "Primary Key with subtransactions having the their IDs concatenated with the original transaction ID."
+        description: "Primary Key with subtransactions having the their IDs concatenated with the original transaction
+          ID."
         constraints:
           - type: primary_key
 
@@ -234,7 +344,8 @@ models:
         tests:
         - accepted_values:
             # name: mart_accepted_values_transactions_type  # Airbyte dbt does not have "name" as an accepted argument
-            values: ['Income', 'Expense', 'Mortgage Payment', 'Credit Card Payment', 'Transfer', 'Retirement Savings', 'NA']
+            values: ['Income', 'Expense', 'Mortgage Payment', 'Credit Card Payment', 'Transfer', 'Retirement Savings',
+              'NA']
 
 
   - name: fct_transactions
@@ -246,7 +357,8 @@ models:
     columns:
       - name: transaction_id
         data_type: text
-        description: "Primary Key with subtransactions having the their IDs concatenated with the original transaction ID."
+        description: "Primary Key with subtransactions having the their IDs concatenated with the original transaction
+          ID."
         constraints:
           - type: primary_key
 
@@ -336,4 +448,5 @@ models:
         tests:
         - accepted_values:
             # name: mart_accepted_values_transactions_type  # Airbyte dbt does not have "name" as an accepted argument
-            values: ['Credit Card Payment', 'Expense', 'Income', 'Mortgage Payment', 'NA', 'Retirement Savings', 'Transfer']
+            values: ['Credit Card Payment', 'Expense', 'Income', 'Mortgage Payment', 'NA', 'Retirement Savings',
+              'Transfer']
