@@ -1,0 +1,17 @@
+version: 2
+
+seeds:
+  - name: student_loan_interest
+    description: "CSV of missing student loan interest that's applied every month."
+    docs:
+      show: true
+    columns:
+      - name: date
+        description: "Date of interest applied."
+        tests:
+          - unique
+          - not_null
+      - name: interest_amount
+        description: "Amount of interest applied."
+        tests:
+          - not_null
