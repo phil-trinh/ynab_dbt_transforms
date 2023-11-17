@@ -1,7 +1,7 @@
 {{ config(alias="transactions") }}
 
--- Main transactions table
 with
+    -- Main transactions table
     transactions as (
         select
             transaction_id,
