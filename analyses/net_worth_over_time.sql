@@ -1,22 +1,23 @@
--- Sum amounts, aggregated to monthly
 with
+    -- Sum amounts, aggregated to monthly
     transactions as (
         select
             date_trunc('month', transaction_date) as transaction_date,
             sum(transaction_amount) as transaction_sum
-        from {{ ref('fct_transactions') }}
+        from {{ ref("fct_transactions") }}
         where account_name not in ('First Parallel Home', 'First Parallel Mortgage')
         group by 1
     ),
 
-    -- Then run a cumulative sum over the monthly sums
+    -- Cumulative sum over the monthly sums
     cumulative_calculation as (
         select
             transaction_date,
-            {{ cumulative_sum('transaction_sum', 'transaction_date')}} as net_worth
+            {{ cumulative_sum("transaction_sum", "transaction_date") }} as net_worth
         from transactions
     ),
 
+    -- Calculate absolute net worth change from beginning of period
     change_calculation as (
         select
             *,
@@ -24,6 +25,7 @@ with
         from cumulative_calculation
     ),
 
+    -- Calculate percetnage net worth change from beginning of period
     percentage_calculation as (
         select
             *,
@@ -31,4 +33,5 @@ with
         from change_calculation
     )
 
-select * from percentage_calculation
+select *
+from percentage_calculation
