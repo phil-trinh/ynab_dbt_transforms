@@ -1,0 +1,58 @@
+version: 2
+
+exposures:
+
+  - name: phils_budget_dashboard
+    label: Phil's Budget Dashboard
+    type: dashboard
+    maturity: medium
+    url: https://dashboards.parallel-adventures.net/public/dashboard/6ceff6eb-3dc7-43fa-a7f8-f32fbb783d54
+    tags: ['dashboards']
+    description: |
+      Phil's main budget dashboard for showing
+      - This Month's Trend
+      - Spending Totals
+      - Spending Trends
+
+    depends_on:
+      - ref('fct_transactions')
+      - ref('spending_transactions_datamart')
+
+    owner:
+      name: Phil Trinh
+      email: phil.trinh@me.com
+
+
+  - name: spend_modeling
+    label: Phil's Spend Modeling
+    type: ml
+    maturity: low
+    url: https://dashboards.parallel-adventures.net/public/dashboard/6ceff6eb-3dc7-43fa-a7f8-f32fbb783d54
+    tags: ['notebook', 'ml']
+    description: |
+      Machine learning modeling on transaction amounts to predict future spend in each budget category.
+
+    depends_on:
+      - ref('fct_transactions')
+
+    owner:
+      name: Phil Trinh
+      email: phil.trinh@me.com
+
+
+  - name: demo_budget_dashboard
+    label: Demo Budget Dashboard
+    type: dashboard
+    maturity: medium
+    url: https://dashboards.parallel-adventures.net/public/dashboard/6446ad3f-7db1-4670-9c9d-91d507e3ac68
+    tags: ['dashboards']
+    description: >
+      Demo version of Phil's budget dashboard for public exposure. Data has been scrubbed of PII and transaction amounts
+      have been randomly generated based on the actual distribution of transaction amounts.
+
+    depends_on:
+      - ref('spending_transactions_datamart_demo')
+
+    owner:
+      name: Phil Trinh
+      email: phil.trinh@me.com

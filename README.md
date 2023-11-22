@@ -20,9 +20,9 @@ As part of a local deployment of a data analytics development system, this repos
   - [x] Datamart
   - [x] Node Colors
   - [x] Data Pipeline Architecture Diagram
+  - [x] Exposures
 
 ## To-Do
-- [ ] Exposures
 - [ ] Metrics
 - [ ] Semantic Layer
 - [ ] Deploy Documentation on Website
