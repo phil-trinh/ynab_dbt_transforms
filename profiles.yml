@@ -1,0 +1,21 @@
+config:
+  partial_parse: true
+  printer_width: 120
+  send_anonymous_usage_stats: false
+  use_colors: true
+
+ynab_dbt_transforms:
+  outputs:
+
+    dev:
+      type: postgres
+      threads: 8
+      host: "{{ env_var('DB_HOST') }}"
+      port: "{{ env_var('DB_PORT') }}"
+      user: "{{ env_var('DB_USER') }}"
+      pass: "{{ env_var('DB_PASSWORD') }}"
+      dbname: "{{ env_var('DEV_DB_NAME') }}"
+      schema: "{{ env_var('DB_SCHEMA') }}"
+      sslmode: require
+
+  target: dev
