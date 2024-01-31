@@ -26,12 +26,11 @@ with
             and (
                 transaction_memo not in (
                     'Federal Tax Payment 😕',
-                    'For dad to borrow',
-                    'Part 1 of dad’s repayment',
                     'Withdrawal of Roth IRA contributions for 2022'
                 )
                 or transaction_memo is null
             )
+            and category_name <> 'Family Support'
     )
 
 select *
