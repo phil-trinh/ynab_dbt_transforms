@@ -24,5 +24,5 @@ As part of a local deployment of a data analytics development system, this repos
 
 ## To-Do
 - [ ] Metrics
-- [ ] Semantic Layer
+- [ ] CI/CD Setup
 - [ ] Deploy Documentation on Website
