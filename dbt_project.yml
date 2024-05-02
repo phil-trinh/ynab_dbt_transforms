@@ -60,4 +60,10 @@ models:
         node_color: "gold"
 
 on-run-end:
-  - '{% for schema in schemas %}grant usage on schema {{ schema }} to "READER";{% endfor %}'
+  - >
+    {% for schema in schemas %}
+    GRANT USAGE ON SCHEMA {{ schema }} to "READER";
+    GRANT SELECT ON ALL TABLES IN SCHEMA {{ schema }} TO "READER";
+    ALTER DEFAULT PRIVILEGES IN SCHEMA {{ schema }}
+      GRANT SELECT ON TABLES TO "READER";
+    {% endfor %}
