@@ -31,6 +31,7 @@ with
                 or transaction_memo is null
             )
             and category_name <> 'Family Support'
+        order by transaction_date desc
     )
 
 select *

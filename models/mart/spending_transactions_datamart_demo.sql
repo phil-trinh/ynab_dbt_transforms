@@ -119,6 +119,7 @@ with  -- Transactions Translated
                 end
             ) as payee_name
         from transactions_join_outliers
+        order by transaction_date desc
     )
 
 select *
